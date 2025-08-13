@@ -52,19 +52,19 @@ class NormalizeEnv(gym.Wrapper):
     def reset(self, **kwargs):
         obs, info = self.env.reset(**kwargs)
         if self._obs_mean is not None:
-            obs = self._normalize_obs(obs)
+            obs = self._normalize(obs, self._obs_mean, self._obs_std)
         return obs, info
 
     def step(self, action):
         if self._action_mean is not None:
-            action = self._unnormalize_action(action)
+            action = self._unnormalize(action, self._action_mean, self._action_std)
         obs, reward, terminated, truncated, info = self.env.step(action)
         if self._obs_mean is not None:
-            obs = self._normalize_obs(obs)
+            obs = self._normalize(obs, self._obs_mean, self._obs_std)
         return obs, reward, terminated, truncated, info
 
-    def _normalize_obs(self, obs):
-        return (obs - self._obs_mean) / self._obs_std
+    def _unnormalize(self, x, mean, std):
+        return x * std + mean
 
-    def _unnormalize_action(self, action):
-        return action * self._action_std + self._action_mean
+    def _normalize(self, x, mean, std):
+        return (x - mean) / std
