@@ -1,4 +1,0 @@
-gymnasium>=1.2.0
-jax[cuda12]
-numpy>=2
-tyro>=0.9
